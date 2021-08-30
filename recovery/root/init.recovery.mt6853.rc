@@ -13,13 +13,13 @@ service hwservicemanager /system/bin/hwservicemanager
     disabled
     seclabel u:r:recovery:s0
 
-service servicemanager /sbin/servicemanager
+service servicemanager /system/bin/servicemanager
     user root
     group root readproc
     disabled
     seclabel u:r:recovery:s0
 
-service keystore_auth /systen/bin/keystore_auth
+service keystore_auth /system/bin/keystore_auth
     oneshot
     user system
     group root
@@ -44,7 +44,12 @@ service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.truston
     disabled
     seclabel u:r:recovery:s0
 
-####
+service hal_cryptoeng_oplus /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
 on property:hwservicemanager.ready=true
     start keymaster-4-0
     start gatekeeper-1-0
@@ -53,6 +58,7 @@ on property:ro.crypto.state=unsupported
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
+    stop hal_cryptoeng_oplus
     stop servicemanager
     stop hwservicemanager
 
@@ -60,10 +66,11 @@ on property:ro.crypto.state=unencrypted
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
+    stop hal_crypto_eng_oplus
     stop servicemanager
     stop hwservicemanager
 
-on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+on property:twrp.decrypt.done=true
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
