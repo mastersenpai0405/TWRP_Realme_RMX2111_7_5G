@@ -25,7 +25,7 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 
 # Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := RMX2111
-PRODUCT_NAME := twrp_RMX2111CN
+PRODUCT_NAME := twrp_RMX2111
 PRODUCT_BRAND := realme
 PRODUCT_MODEL := Realme 7 5G
 PRODUCT_MANUFACTURER := realme
