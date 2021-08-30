@@ -12,12 +12,14 @@
         manifest_km4.xml
         manifest_tee.xml
         manifest_trustonic.xml
+        manifest_keyinstall.xml
         manifest_log.xml
         manifest_mdmonitor.xml
         manifest_netdagent.xml
         manifest_pq.xml
         manifest_mmservice.xml
         manifest_gnss.xml
+        manifest_oppo_nfc.xml
         manifest.xml
         manifest_dolby_356.xml
 -->
@@ -428,6 +430,16 @@
         <fqname>@1.2::IEmd/EmHidlServer</fqname>
     </hal>
     <hal format="hidl">
+        <name>vendor.mediatek.hardware.keyinstall</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IKeyinstall</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@1.0::IKeyinstall/default</fqname>
+    </hal>
+    <hal format="hidl">
         <name>vendor.mediatek.hardware.keymaster_attestation</name>
         <transport>hwbinder</transport>
         <version>1.1</version>
@@ -799,6 +811,16 @@
             <instance>default</instance>
         </interface>
         <fqname>@1.0::IKtv/default</fqname>
+    </hal>
+    <hal format="hidl">
+        <name>vendor.oppo.hardware.nfc</name>
+        <transport>hwbinder</transport>
+        <version>1.0</version>
+        <interface>
+            <name>IOppoNfc</name>
+            <instance>default</instance>
+        </interface>
+        <fqname>@1.0::IOppoNfc/default</fqname>
     </hal>
     <hal format="hidl">
         <name>vendor.oppo.hardware.oiface</name>

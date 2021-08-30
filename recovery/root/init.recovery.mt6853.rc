@@ -2,38 +2,37 @@
 on fs
     #wait /dev/block/platform/soc/${ro.boot.bootdevice}
     #symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
-    install_keyring
+    mkdir /mnt/vendor/persist/mcRegistry
 
 on fs
     start hwservicemanager
     start servicemanager
-
+    install_keyring
+    setprop crypto.ready 1
+        
 service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry \
-	-r /vendor/app/mcRegistry/06090000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/020b0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/05070000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/030b0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/03100000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/030c0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/40188311faf343488db888ad39496f9a.drbin \
-	-r /vendor/app/mcRegistry/070c0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/090b0000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/0f5eed3c3b5a47afacca69a84bf0efad.drbin \
-	-r /vendor/app/mcRegistry/07060000000000000000000000007169.drbin \
-	-r /vendor/app/mcRegistry/4be4f7dc1f2c11e5b5f7727283247c7f.drbin \
-	-r /vendor/app/mcRegistry/08070000000000000000000000008270.drbin \
-	-r /vendor/app/mcRegistry/07070000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/07407000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/9073f03a9618383bb1856eb3f990babd.drbin \
-	-r /vendor/app/mcRegistry/6b3f5fa0f8cf55a7be2582587d62d63a.drbin \
-	-r /vendor/app/mcRegistry/09070000000000000000000000000000.drbin \
-	-r /vendor/app/mcRegistry/5020170115e016302017012521300000.drbin
+    -r /vendor/app/mcRegistry/06090000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/020b0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/05070000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/030b0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/03100000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/030c0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/40188311faf343488db888ad39496f9a.drbin \
+    -r /vendor/app/mcRegistry/070c0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/090b0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/0f5eed3c3b5a47afacca69a84bf0efad.drbin \
+    -r /vendor/app/mcRegistry/07060000000000000000000000007169.drbin \
+    -r /vendor/app/mcRegistry/07407000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/9073f03a9618383bb1856eb3f990babd.drbin
     user root
     group root
     disabled
     seclabel u:r:recovery:s0
+
+on property:recovery.reload.persist=trigger_reload_persist
+    load_persist_props
 
 service hwservicemanager /system/bin/hwservicemanager
     user root
@@ -59,28 +58,47 @@ service keystore /system/bin/keystore /tmp/misc/keystore
     group root drmrpc readproc
     disabled
     seclabel u:r:recovery:s0
-    
+
+#Add for OPPO FBE
+service hal_cryptoeng_oppo /vendor/bin/hw/vendor.oppo.hardware.cryptoeng@1.0-service
+    user root
+    group root
+    disabled
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
+    seclabel u:r:recovery:s0
+
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     user root
     group root
     disabled
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
     seclabel u:r:recovery:s0
 
-service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.trustonic
+service keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service.trustonic
     user root
     group root drmrpc
     disabled
+    setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
     seclabel u:r:recovery:s0
 
-on property:hwservicemanager.ready=true
+on property:hwservicemanager.ready=true && property:servicemanager.ready=true
     mkdir /mnt/vendor
     mkdir /mnt/vendor/persist
     mkdir /mnt/vendor/persist/mcRegistry
     start mobicore
     start keymaster-4-0
     start gatekeeper-1-0
+    start hal_cryptoeng_oppo
+
+on property:enable.fbe.service=0
+    stop hal_cryptoeng_oppo
+    stop mobicore
+    stop servicemanager
+    stop hwservicemanager
+    stop keymaster-4-0
 
 on property:ro.crypto.state=unsupported
+    stop hal_cryptoeng_oppo
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
@@ -89,6 +107,7 @@ on property:ro.crypto.state=unsupported
     stop hwservicemanager
 
 on property:ro.crypto.state=unencrypted
+    stop hal_cryptoeng_oppo
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
@@ -96,6 +115,7 @@ on property:ro.crypto.state=unencrypted
     stop hwservicemanager
 
 on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+    stop hal_cryptoeng_oppo
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
