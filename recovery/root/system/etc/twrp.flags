@@ -1,0 +1,30 @@
+# Android fstab file.
+# The filesystem that contains the filesystem checker binary (typically /system) cannot
+# specify MF_CHECK, and must come before any filesystems that do specify MF_CHECK
+
+# mount point    fstype           device                    device2                flags
+
+# Common partition
+/data            ext4    /dev/block/platform/bootdevice/by-name/userdata           flags=fileencryption=aes-256-xts
+/boot            emmc    /dev/block/platform/bootdevice/by-name/boot               flags=backup=1;display="Boot";flashimg=1
+/dtbo            emmc    /dev/block/platform/bootdevice/by-name/dtbo               flags=backup=1;display="Dtbo";flashimg=1
+/cache           ext4    /dev/block/platform/bootdevice/by-name/cache              flags=backup=1;wipeingui;wipeduringfactoryreset
+/recovery        emmc    /dev/block/platform/bootdevice/by-name/recovery           flags=backup=1;display="Recovery"
+/vbmeta          emmc    /dev/block/platform/bootdevice/by-name/vbmeta             flags=backup=1;display="Vbmeta";flashimg=1
+
+# MediaTek partition
+/logo            emmc    /dev/block/platform/bootdevice/by-name/logo               flags=backup=1;display="Logo";flashimg=1
+/nvdata          ext4    /dev/block/platform/bootdevice/by-name/nvdata             flags=backup=1;display="nvdata"
+/nvram           emmc    /dev/block/platform/bootdevice/by-name/nvram              flags=backup=1;display="nvram";flashimg=1
+/para            emmc    /dev/block/platform/bootdevice/by-name/para               flags=backup=1;display="para"
+/persist         ext4    /dev/block/platform/bootdevice/by-name/persist            flags=backup=1;display="Persist";mounttodecrypt
+/proinfo         emmc    /dev/block/platform/bootdevice/by-name/proinfo            flags=backup=1;display="proinfo"
+/protect_f       ext4    /dev/block/platform/bootdevice/by-name/protect1           flags=backup=1;display="protect_f"
+/protect_s       ext4    /dev/block/platform/bootdevice/by-name/protect2           flags=backup=1:display="protect_s"
+/tee1            emmc    /dev/block/platform/bootdevice/by-name/tee1               flags=backup=1;display="tee1"
+/tee2            emmc    /dev/block/platform/bootdevice/by-name/tee2               flags=backup=1;display="tee2"
+
+
+/external_sd      vfat     /dev/block/mmcblk0p1  /dev/block/mmcblk0            flags=display="external_sd";storage;wipeingui;removable;fsflags="utf8"
+/usb-otg          vfat     /dev/block/sdd1  /dev/block/sdd                     flags=display="usb-otg";storage;wipeingui;removable;fsflags="utf8"
+
