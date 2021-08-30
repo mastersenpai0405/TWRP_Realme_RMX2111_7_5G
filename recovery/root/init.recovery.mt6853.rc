@@ -1,12 +1,12 @@
 
-on fs
+on init 
     #wait /dev/block/platform/soc/${ro.boot.bootdevice}
     #symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
+    mkdir /mnt/vendor/persist
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist rw
     mkdir /mnt/vendor/persist/mcRegistry
 
 on fs
-    start hwservicemanager
-    start servicemanager
     install_keyring
     setprop crypto.ready 1
         
@@ -48,6 +48,7 @@ service servicemanager /system/bin/servicemanager
     seclabel u:r:recovery:s0
 
 service keystore_auth /system/bin/keystore_auth
+    oneshot
     user system
     group root
     disabled
@@ -81,7 +82,7 @@ service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.truston
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
     seclabel u:r:recovery:s0
 
-on property:hwservicemanager.ready=true && property:servicemanager.ready=true
+on property:hwservicemanager.ready=true
     start mobicore
     start keymaster-4-0
     start gatekeeper-1-0
@@ -93,6 +94,7 @@ on property:enable.fbe.service=0
     stop servicemanager
     stop hwservicemanager
     stop keymaster-4-0
+    stop gatekeeper-1-0
 
 on property:ro.crypto.state=unsupported
     stop hal_cryptoeng_oppo
