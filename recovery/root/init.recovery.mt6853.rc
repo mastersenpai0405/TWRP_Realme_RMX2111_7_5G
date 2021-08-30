@@ -60,12 +60,6 @@ service keystore /system/bin/keystore /tmp/misc/keystore
     disabled
     seclabel u:r:recovery:s0
     
-service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
-    user root
-    group root drmrpc
-    disabled
-    seclabel u:r:recovery:s0
-
 service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     user root
     group root
@@ -85,7 +79,6 @@ on property:hwservicemanager.ready=true
     start mobicore
     start keymaster-4-0
     start gatekeeper-1-0
-    start hal_cryptoeng_oppo
 
 on property:ro.crypto.state=unsupported
     stop mobicore
@@ -99,7 +92,6 @@ on property:ro.crypto.state=unencrypted
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
-    stop hal_cryptoeng_oppo
     stop servicemanager
     stop hwservicemanager
 
@@ -107,6 +99,5 @@ on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
-    stop hal_cryptoeng_oppo
     stop servicemanager
     stop hwservicemanager
