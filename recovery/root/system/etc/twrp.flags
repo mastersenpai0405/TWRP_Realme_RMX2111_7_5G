@@ -5,7 +5,6 @@
 # mount point    fstype           device                    device2                flags
 
 # Common partition
-/data            ext4    /dev/block/platform/bootdevice/by-name/userdata           flags=fileencryption=aes-256-xts
 /boot            emmc    /dev/block/platform/bootdevice/by-name/boot               flags=backup=1;display="Boot";flashimg=1
 /dtbo            emmc    /dev/block/platform/bootdevice/by-name/dtbo               flags=backup=1;display="Dtbo";flashimg=1
 /cache           ext4    /dev/block/platform/bootdevice/by-name/cache              flags=backup=1;wipeingui;wipeduringfactoryreset
