@@ -1,5 +1,10 @@
-## TWRP_Realme_RMX2111_7_5G
+## TWRP RECOVERY Realme (RMX2111) 7 5G
 **TWRP DEVICE TREE FOR REALME 7 5G | STATUS : DECRYPTED**
 
-- use android-10.0 branch
+- android-10.0 branch
 - git clone https://github.com/mastersenpai0405/TWRP_Realme_RMX2111_7_5G -b android-10.0
+
+## TWRP RECOVERY Realme (RMX3092) 8
+**TWRP DEVICE TREE FOR REALME 8 | STATUS : TEST**
+- RMX3092_10.0 branch
+- git clone https://github.com/mastersenpai0405/TWRP_Realme_RMX2111_7_5G -b RMX3092_10.0
