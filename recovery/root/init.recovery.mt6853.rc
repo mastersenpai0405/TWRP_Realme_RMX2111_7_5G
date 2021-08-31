@@ -87,6 +87,9 @@ service keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service.trus
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
     seclabel u:r:recovery:s0
 
+on property:vendor.sys.listeners.registered=true && ro.vendor.mtk_trustonic_tee_support=1
+    start keymaster-4-0
+
 on property:hwservicemanager.ready=true
     start mobicore
     start keymaster-4-0
