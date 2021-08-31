@@ -113,7 +113,7 @@ on property:ro.crypto.state=unencrypted
     stop servicemanager
     stop hwservicemanager
 
-on property:twrp.decrypt.done=true && property:twrp.all.users.decrypted=true
+on property:twrp.decrypt.done=true
     stop hal_cryptoeng_oppo
     stop mobicore
     stop keymaster-4-0
