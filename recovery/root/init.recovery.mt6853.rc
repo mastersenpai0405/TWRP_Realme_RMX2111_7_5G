@@ -1,6 +1,6 @@
 import /tee.rc
 
-on init 
+on post-fs
     #wait /dev/block/platform/soc/${ro.boot.bootdevice}
     #symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
     mkdir /mnt/vendor/persist
@@ -54,6 +54,10 @@ service servicemanager /system/bin/servicemanager
     disabled
     seclabel u:r:recovery:s0
 
+on init
+    start servicemanager
+    start hwservicemanager
+    
 service keystore_auth /system/bin/keystore_auth
     oneshot
     user system
