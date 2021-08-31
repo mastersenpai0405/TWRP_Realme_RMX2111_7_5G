@@ -80,7 +80,7 @@ service gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
     setenv LD_LIBRARY_PATH /vendor/lib64:/vendor/lib64/hw:/system/lib64
     seclabel u:r:recovery:s0
 
-service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.trustonic
+service keymaster-4-0 /vendor/bin/hw/android.hardware.keymaster@4.0-service.trustonic
     user root
     group root drmrpc
     disabled
@@ -106,7 +106,6 @@ on property:ro.crypto.state=unsupported
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
-    stop hal_cryptoeng_oppo
     stop servicemanager
     stop hwservicemanager
 
