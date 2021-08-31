@@ -7,8 +7,8 @@
 # 1 "vendor/mediatek/proprietary/hardware/fstab/mt6853/fstab.in.mt6853" 2
 # 146 "vendor/mediatek/proprietary/hardware/fstab/mt6853/fstab.in.mt6853"
 
-system          /system         ext4      ro       wait,,async_discard,avb_keys=/avb/q-gsi.avbpubkey:/avb/r-gsi.avbpubkey:/avb/s-gsi.avbpubkey
-vendor          /vendor         ext4      ro       wait,async_discard
+system          /system         ext4      ro       wait
+vendor          /vendor         ext4      ro       wait
 
 # 159 "vendor/mediatek/proprietary/hardware/fstab/mt6853/fstab.in.mt6853"
 oppo_product     /oppo_product      ext4      ro         wait,nofail
@@ -16,7 +16,7 @@ oppo_engineering /oppo_engineering  ext4      ro         wait,nofail
 common_preload   /common_preload    ext4      ro         wait,nofail
 
 # userdata
-/dev/block/by-name/userdata /data       f2fs    noatime,nosuid,nodev,discard,noflush_merge,fsync_mode=nobarrier,reserve_root=134217,resgid=1065 wait,check,formattable,quota,resize,reservedsize=128m,checkpoint=fs,fileencryption=aes-256-xts
+/dev/block/by-name/userdata /data       f2fs    noatime,nosuid,nodev,discard,noflush_merge,fsync_mode=nobarrier,reserve_root=134217,resgid=1065 wait,check,formattable,resize,fileencryption=aes-256-xts
 
 # Metada
 /dev/block/by-name/md_udc   /metadata   ext4    noatime,nosuid,nodev,discard wait,formattable
