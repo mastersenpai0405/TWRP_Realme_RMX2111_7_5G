@@ -16,7 +16,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/realme/RMX2111
+DEVICE_PATH := device/realme/RMX3092
 
 # For building with minimal manifest
 ALLOW_MISSING_DEPENDENCIES := true
@@ -67,7 +67,7 @@ BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
 BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
 
 # Assert
-TARGET_OTA_ASSERT_DEVICE := RMX2111
+TARGET_OTA_ASSERT_DEVICE := RMX3092
 
 # Partition
 BOARD_FLASH_BLOCK_SIZE := 131072
