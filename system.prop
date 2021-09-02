@@ -5,3 +5,6 @@ persist.sys.isUsbOtgEnabled=true
 ro.sys.usb.mtp.whql.enable=0
 ro.sys.usb.storage.type=mtp
 ro.vendor.mediatek.platform=MT6853
+ro.vendor.mtk_tee_gp_support=1
+ro.hardware.kmsetkey=trustonic
+ro.vendor.mtk_trustonic_tee_support=1

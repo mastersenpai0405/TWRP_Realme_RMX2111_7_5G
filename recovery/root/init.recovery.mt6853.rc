@@ -1,11 +1,29 @@
+import /tee.rc
 
 on fs
     setprop crypto.ready 1
     install_keyring
 
-on fs
-    start hwservicemanager
-    start servicemanager
+# Start Daemon (Registry directories should already be present)
+service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry \
+    -r /vendor/app/mcRegistry/020f0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/05120000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/020b0000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/07060000000000000000000000007169.drbin \
+    -r /vendor/app/mcRegistry/40188311faf343488db888ad39496f9a.drbin \
+    -r /vendor/app/mcRegistry/06090000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/0f5eed3c3b5a47afacca69a84bf0efad.drbin \
+    -r /vendor/app/mcRegistry/07407000000000000000000000000000.drbin \
+    -r /vendor/app/mcRegistry/9073f03a9618383bb1856eb3f990babd.drbin \
+    -r /vendor/app/mcRegistry/6b3f5fa0f8cf55a7be2582587d62d63a.drbin \
+    -r /vendor/app/mcRegistry/5020170115e016302017012521300000.drbin
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+on property:recovery.reload.persist=trigger_reload_persist
+    load_persist_props
 
 service hwservicemanager /system/bin/hwservicemanager
     user root
@@ -18,6 +36,10 @@ service servicemanager /system/bin/servicemanager
     group root readproc
     disabled
     seclabel u:r:recovery:s0
+
+on init
+    start hwservicemanager
+    start servicemanager
 
 service keystore_auth /system/bin/keystore_auth
     oneshot
@@ -32,7 +54,26 @@ service keystore /system/bin/keystore /tmp/misc/keystore
     disabled
     seclabel u:r:recovery:s0
 
-service gatekeeper-1-0 /vendor/bin/android.hardware.gatekeeper@1.0-service
+service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+#Add for OPPO FBE
+service vendor.gatekeeper-1-0 /vendor/bin/hw/android.hardware.gatekeeper@1.0-service
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service gatekeeperd /system/bin/gatekeeperd /data/misc/gatekeeper
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+
+service hal_cryptoeng_oppo /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
     user root
     group root
     disabled
@@ -40,25 +81,32 @@ service gatekeeper-1-0 /vendor/bin/android.hardware.gatekeeper@1.0-service
 
 service keymaster-4-0 /system/bin/android.hardware.keymaster@4.0-service.trustonic
     user root
-    group root drmrpc
+    group root
     disabled
     seclabel u:r:recovery:s0
 
-service hal_cryptoeng_oplus /system/bin/hw/vendor.oplus.hardware.cryptoeng@1.0-service
+service health-2-1 /system/bin/android.hardware.health@2.1-service
     user root
     group root
     disabled
     seclabel u:r:recovery:s0
 
+on property:vendor.sys.listeners.registered=true && ro.vendor.mtk_trustonic_tee_support=1
+    start keymaster-4-0
+
 on property:hwservicemanager.ready=true
+    start mobicore
     start keymaster-4-0
     start gatekeeper-1-0
+    start hal_cryptoeng_oppo
+    start gatekeperd
 
 on property:ro.crypto.state=unsupported
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
-    stop hal_cryptoeng_oplus
+    stop hal_cryptoeng_oppo
+    stop gatekeeperd
     stop servicemanager
     stop hwservicemanager
 
@@ -66,7 +114,8 @@ on property:ro.crypto.state=unencrypted
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
-    stop hal_crypto_eng_oplus
+    stop hal_cryptoeng_oppo
+    stop gatekeeperd
     stop servicemanager
     stop hwservicemanager
 
@@ -74,5 +123,10 @@ on property:twrp.decrypt.done=true
     stop mobicore
     stop keymaster-4-0
     stop gatekeeper-1-0
+    stop hal_cryptoeng_oppo
+    stop gatekeeperd
     stop servicemanager
     stop hwservicemanager
+    
+on boot
+    start health-2-1
