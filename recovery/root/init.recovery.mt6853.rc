@@ -91,7 +91,7 @@ service health-2-1 /system/bin/android.hardware.health@2.1-service
     disabled
     seclabel u:r:recovery:s0
 
-on property:vendor.sys.listeners.registered=true && ro.vendor.mtk_trustonic_tee_support=1
+on property:vendor.sys.listeners.registered=true && property:ro.vendor.mtk_trustonic_tee_support=1
     start keymaster-4-0
 
 on property:hwservicemanager.ready=true
