@@ -22,25 +22,6 @@ service mobicore /vendor/bin/mcDriverDaemon --P1 /mnt/vendor/persist/mcRegistry 
     disabled
     seclabel u:r:recovery:s0
 
-on property:recovery.reload.persist=trigger_reload_persist
-    load_persist_props
-
-service hwservicemanager /system/bin/hwservicemanager
-    user root
-    group root readproc
-    disabled
-    seclabel u:r:recovery:s0
-
-service servicemanager /system/bin/servicemanager
-    user root
-    group root readproc
-    disabled
-    seclabel u:r:recovery:s0
-
-on init
-    start hwservicemanager
-    start servicemanager
-
 service keystore_auth /system/bin/keystore_auth
     oneshot
     user system
@@ -91,7 +72,7 @@ service health-2-1 /system/bin/android.hardware.health@2.1-service
     disabled
     seclabel u:r:recovery:s0
 
-on property:vendor.sys.listeners.registered=true && property:ro.vendor.mtk_trustonic_tee_support=1
+on property:vendor.sys.listeners.registered=true
     start keymaster-4-0
 
 on property:hwservicemanager.ready=true
@@ -99,7 +80,6 @@ on property:hwservicemanager.ready=true
     start keymaster-4-0
     start gatekeeper-1-0
     start hal_cryptoeng_oppo
-    start gatekeperd
 
 on property:ro.crypto.state=unsupported
     stop mobicore
@@ -127,6 +107,3 @@ on property:twrp.decrypt.done=true
     stop gatekeeperd
     stop servicemanager
     stop hwservicemanager
-    
-on boot
-    start health-2-1

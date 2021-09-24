@@ -27,7 +27,7 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 PRODUCT_DEVICE := RMX2111
 PRODUCT_NAME := twrp_RMX2111
 PRODUCT_BRAND := realme
-PRODUCT_MODEL := Realme 7 5G
+PRODUCT_MODEL := Realme 7 5G,Realme Q2 5G
 PRODUCT_MANUFACTURER := realme
 
 PRODUCT_PACKAGES += \
